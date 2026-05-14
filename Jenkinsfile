@@ -11,7 +11,7 @@ pipeline{
             steps{
                 script{
                   echo "========executing settingup environment========"
-                  sh 'docker build -t flask-jenkins-image:latest .'
+                  bat 'docker build -t flask-jenkins-image:latest .'
                 }
             }
         }
