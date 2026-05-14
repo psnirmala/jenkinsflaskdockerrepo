@@ -7,31 +7,18 @@ pipeline{
                 checkout scm
             }
         }            
-        stage("setup environment"){
+        stage("build docker image"){
             steps{
                   echo "========executing settingup environment========"
-                bat '''
-                python -m venv .venv1
-                call .venv1\\Scripts\\activate
-                pip install -r requirements.txt
-                '''
+                  bat 'docker build -t flask-jenkins-image:latest .'
             }
         }
-        stage("run tests"){
+        
+        stage("Deploy Docker Container"){
             steps{
-                bat '''
-                echo "========executing unittests========"
-                call .venv1\\Scripts\\activate
-                pytest tests/
-                '''
-            }
-        }
-        stage("Deploy"){
-            steps{
-                bat '''
-                 echo "========deploying========"
-                 start /B python app.py   
-                '''
+                bat 'docker stop flask-container || true'
+                bat 'docker rm flask-container || true'
+                bat 'docker run -d -p 5000:5000 --name flask-container flask-jenkins-image:latest'
             }
         }
     }
