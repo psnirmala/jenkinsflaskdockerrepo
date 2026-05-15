@@ -19,6 +19,7 @@ pipeline{
         stage("Deploy Docker Container"){
             steps{
                 script{
+                bat 'for /f %%u in (\'docker ps -q -a -f "name=flask-container"\') do docker rm -f %%u'    
                 bat 'docker run -d -p 5000:5000 --name flask-container flask-jenkins-image:latest'
                 }
             }
